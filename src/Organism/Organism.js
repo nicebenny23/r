@@ -17,11 +17,14 @@ class Organism {
         this.anatomy = new Anatomy(this)
         this.direction = Directions.down; // direction of movement
         this.rotation = Directions.up; // direction of rotation
-        this.can_rotate = Hyperparams.moversCanRotate;
+        this.can_rotate = Hyperparams.rotationEnabled;
         this.move_count = 0;
         this.move_range = 4;
         this.ignore_brain_for = 0;
         this.mutability = 5;
+        this.addProb = 33;
+        this.changeProb = 33;
+        this.removeProb = 33;
         this.damage = 0;
         this.brain = new Brain(this);
         if (parent != null) {
@@ -32,6 +35,9 @@ class Organism {
     inherit(parent) {
         this.move_range = parent.move_range;
         this.mutability = parent.mutability;
+        this.addProb = parent.addProb;
+        this.changeProb = parent.changeProb;
+        this.removeProb = parent.removeProb;
         this.species = parent.species;
         // this.birth_distance = parent.birth_distance;
         for (var c of parent.anatomy.cells){
@@ -47,11 +53,10 @@ class Organism {
 
     // amount of food required before it can reproduce
     foodNeeded() {
-        return this.anatomy.cells.length;
+        return this.anatomy.getTotalCost();
     }
 
     lifespan() {
-        // console.log(Hyperparams.lifespanMultiplier)
         return this.anatomy.cells.length * Hyperparams.lifespanMultiplier;
     }
 
@@ -63,7 +68,7 @@ class Organism {
         //produce mutated child
         //check nearby locations (is there room and a direct path)
         var org = new Organism(0, 0, this.env, this);
-        if(Hyperparams.offspringRotate){
+        if(Hyperparams.rotationEnabled){
             org.rotation = Directions.getRandomDirection();
         }
         var prob = this.mutability;
@@ -79,6 +84,35 @@ class Organism {
                 if (org.mutability < 1)
                     org.mutability = 1;
             }
+            var amount;
+            var mutation_type_mutability = 5;
+            //mutate the add probability
+            amount = Math.random()*mutation_type_mutability - mutation_type_mutability/2;
+            org.addProb += amount;
+            org.addProb = Math.min(Math.max(org.addProb, 0), 100);
+            org.changeProb -= amount/2;
+            org.removeProb -= amount/2;
+            //fix the probabilities (floating point errors)
+            org.changeProb = Math.min(Math.max(100 - org.addProb - org.removeProb, 0), 100);
+            org.removeProb = Math.min(Math.max(100 - org.addProb - org.changeProb, 0), 100);
+            //mutate the change probability
+            amount = Math.random()*mutation_type_mutability - mutation_type_mutability/2;
+            org.changeProb += amount;
+            org.changeProb = Math.min(Math.max(org.changeProb, 0), 100);
+            org.addProb -= amount/2;
+            org.removeProb -= amount/2;
+            //fix the probabilities (floating point errors)
+            org.addProb = Math.min(Math.max(100 - org.changeProb - org.removeProb, 0), 100);
+            org.removeProb = Math.min(Math.max(100 - org.changeProb - org.addProb, 0), 100);
+            //mutate the remove probability
+            amount = Math.random()*mutation_type_mutability - mutation_type_mutability/2;
+            org.removeProb += amount;
+            org.removeProb = Math.min(Math.max(org.removeProb, 0), 100);
+            org.addProb -= amount/2;
+            org.changeProb -= amount/2;
+            //fix the probabilities (floating point errors)
+            org.addProb = Math.min(Math.max(100 - org.removeProb - org.changeProb, 0), 100);
+            org.changeProb = Math.min(Math.max(100 - org.removeProb - org.addProb, 0), 100);
         } 
         var mutated = false;
         if (Math.random() * 100 <= prob) {
@@ -118,13 +152,13 @@ class Organism {
                 org.species.addPop();
             }
         }
-        this.food_collected -= this.foodNeeded();
+        Math.max(this.food_collected -= this.foodNeeded(), 0);
 
     }
 
     mutate() {
         let mutated = false;
-        if (this.calcRandomChance(Hyperparams.addProb)) {
+        if (this.calcRandomChance(this.addProb)) {
             let branch = this.anatomy.getRandomCell();
             let state = CellStates.getRandomLivingType();//branch.state;
             let growth_direction = Neighbors.all[Math.floor(Math.random() * Neighbors.all.length)]
@@ -135,13 +169,13 @@ class Organism {
                 this.anatomy.addRandomizedCell(state, c, r);
             }
         }
-        if (this.calcRandomChance(Hyperparams.changeProb)){
+        if (this.calcRandomChance(this.changeProb)){
             let cell = this.anatomy.getRandomCell();
             let state = CellStates.getRandomLivingType();
             this.anatomy.replaceCell(state, cell.loc_col, cell.loc_row);
             mutated = true;
         }
-        if (this.calcRandomChance(Hyperparams.removeProb)){
+        if (this.calcRandomChance(this.removeProb)){
             if(this.anatomy.cells.length > 1) {
                 let cell = this.anatomy.getRandomCell();
                 mutated = this.anatomy.removeCell(cell.loc_col, cell.loc_row);
@@ -237,14 +271,13 @@ class Organism {
         return cell != null && (cell.state == CellStates.empty || cell.owner == this || cell.owner == parent || cell.state == CellStates.food);
     }
 
-    isClear(col, row, rotation=this.rotation, ignore_armor=false) {
+    isClear(col, row, rotation=this.rotation) {
         for(var loccell of this.anatomy.cells) {
             var cell = this.getRealCell(loccell, col, row, rotation);
             if (cell==null) {
                 return false;
             }
-            // console.log(cell.owner == this)
-            if (cell.owner==this || cell.state==CellStates.empty || (!Hyperparams.foodBlocksReproduction && cell.state==CellStates.food) || (ignore_armor && loccell.state==CellStates.armor && cell.state==CellStates.food)){
+            if (cell.owner==this || cell.state==CellStates.empty || (!Hyperparams.foodBlocksReproduction && cell.state==CellStates.food)){
                 continue;
             }
             return false;
@@ -263,7 +296,11 @@ class Organism {
         for (var cell of this.anatomy.cells) {
             var real_c = this.c + cell.rotatedCol(this.rotation);
             var real_r = this.r + cell.rotatedRow(this.rotation);
-            this.env.changeCell(real_c, real_r, CellStates.food, null);
+            if(Hyperparams.cost[cell.state.name] > 0.001) {
+                this.env.changeCell(real_c, real_r, CellStates.food, {food_value: Hyperparams.cost[cell.state.name]});
+            }else{
+                this.env.changeCell(real_c, real_r, CellStates.empty, null);
+            }
         }
         this.species.decreasePop();
         this.living = false;
