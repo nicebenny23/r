@@ -25,10 +25,13 @@ class ColorScheme {
         for (var state of CellStates.all) {
             state.color = color_scheme[state.name];
         }
+      
         CellStates.eye.slit_color=color_scheme['eye-slit'];
+      
         for (var cell_type in color_scheme) {
             $('#'+cell_type+'.cell-type ').css('background-color', color_scheme[cell_type]);
             $('#'+cell_type+'.cell-legend-type').css('background-color', color_scheme[cell_type]);
+            $('#'+cell_type+'.cell-legend-type-living').css('background-color', color_scheme[cell_type]);
             
         }
         this.world_env.renderer.renderFullGrid(this.world_env.grid_map.grid);
