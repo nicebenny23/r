@@ -19,6 +19,9 @@ class WorldEnvironment extends Environment{
         this.organisms = [];
         this.walls = [];
         this.total_mutability = 0;
+        this.total_add_mutability = 0;
+        this.total_change_mutability = 0;
+        this.total_remove_mutability = 0;
         this.largest_cell_count = 0;
         this.reset_count = 0;
         this.total_ticks = 0;
@@ -66,6 +69,9 @@ class WorldEnvironment extends Environment{
         let start_pop = this.organisms.length;
         for (var i of org_indeces.reverse()){
             this.total_mutability -= this.organisms[i].mutability;
+            this.total_add_mutability -= this.organisms[i].addProb;
+            this.total_change_mutability -= this.organisms[i].changeProb;
+            this.total_remove_mutability -= this.organisms[i].removeProb;
             this.organisms.splice(i, 1);
         }
         if (this.organisms.length === 0 && start_pop > 0) {
@@ -91,6 +97,9 @@ class WorldEnvironment extends Environment{
     addOrganism(organism) {
         organism.updateGrid();
         this.total_mutability += organism.mutability;
+        this.total_add_mutability += organism.addProb;
+        this.total_change_mutability += organism.changeProb;
+        this.total_remove_mutability += organism.removeProb;
         this.organisms.push(organism);
         if (organism.anatomy.cells.length > this.largest_cell_count) 
             this.largest_cell_count = organism.anatomy.cells.length;
@@ -103,6 +112,24 @@ class WorldEnvironment extends Environment{
             return Hyperparams.globalMutability;
         }
         return this.total_mutability / this.organisms.length;
+    }
+
+    avarageAddMutability() {
+        if (this.organisms.length < 1)
+            return 0;
+        return this.total_add_mutability / this.organisms.length;
+    }
+
+    avarageChangeMutability() {
+        if (this.organisms.length < 1)
+            return 0;
+        return this.total_change_mutability / this.organisms.length;
+    }
+    
+    avarageRemoveMutability() {
+        if (this.organisms.length < 1)
+            return 0;
+        return this.total_remove_mutability / this.organisms.length;
     }
 
     changeCell(c, r, state, owner) {
@@ -149,6 +176,9 @@ class WorldEnvironment extends Environment{
         this.grid_map.fillGrid(CellStates.empty, !WorldConfig.clear_walls_on_reset);
         this.renderer.renderFullGrid(this.grid_map.grid);
         this.total_mutability = 0;
+        this.total_add_mutability = 0;
+        this.total_change_mutability = 0;
+        this.total_remove_mutability = 0;
         this.total_ticks = 0;
         FossilRecord.clear_record();
         if (reset_life)

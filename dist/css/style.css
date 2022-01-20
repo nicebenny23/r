@@ -287,6 +287,10 @@ button:active{
     margin-top: 5px;
 }
 
+input[type=number]{
+    max-width: 47px;
+}
+
 #skip-frames-number{
     width: 30px;
 }
