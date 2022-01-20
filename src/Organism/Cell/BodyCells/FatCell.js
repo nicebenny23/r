@@ -23,7 +23,7 @@ class FatCell extends BodyCell{
         if (n_cell.state == CellStates.food){
             env.changeCell(n_cell.col, n_cell.row, CellStates.empty, null);
             
-            this.org.lifetime -= Math.random()*this.org.lifetime/(this.org.foodNeeded()*this.org.foodNeeded());
+            this.org.lifetime -= Math.random()*this.org.lifetime/this.org.foodNeeded();
         }
     }
 }
