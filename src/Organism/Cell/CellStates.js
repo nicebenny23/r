@@ -76,7 +76,7 @@ class Eye extends CellState {
 class Bait extends CellState {
     constructor() {
         super('bait');
-        this.plus_color = 'red';
+        this.plus_color = 'blue';
     }
     render(ctx, cell, size) {
         ctx.fillStyle = this.color;

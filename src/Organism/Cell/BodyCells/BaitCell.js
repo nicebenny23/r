@@ -1,7 +1,7 @@
 const CellStates = require("../CellStates");
-const KillerCell = require("./KillerCell");
+const BodyCell = require("./BodyCell");
 
-class BaitCell extends KillerCell{
+class BaitCell extends BodyCell{
     constructor(org, loc_col, loc_row){
         super(org, loc_col, loc_row, CellStates.bait);
     }

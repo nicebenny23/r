@@ -29,13 +29,13 @@ Organism Cells are only found in organisms, and cannot exist on their own in the
 - Killer - Red, harms organisms in directly adjacent cells (besides itself).
 - Armor - Purple, negates the effects of killer cells.
 - Eye - Light purple with a slit, allows the organism to see and move intelligently. See further description below.
-- Bait - Blue with a red plus, allows the organism to deceive other organisms. Eyes will see bait as food. Harms organisms in directly adjacent cells (besides itself).
+- Bait - Light blue with a blue plus, allows the organism to deceive other organisms. Eyes will see bait as food.
 
 ## Organisms
 Organisms are structures of cells that eat food, reproduce, and die.
 When an organism dies, every cell in the grid that was occupied by a cell in its body will be changed to food.
 Their lifespan is calculated by multiplying the number of cells they have by the hyperparameter `Lifespan Multiplier`. They will survive for that many ticks unless killed by another organism.
-When touched by a killer cell or bait cell, an organism will take damage. Once it has taken as much damage as it has cells in its body, it will die. If the hyperparameter `One touch kill` is on, an organism will immediatly die when touched by a killer cell or bait cell.
+When touched by a killer cell, an organism will take damage. Once it has taken as much damage as it has cells in its body, it will die. If the hyperparameter `One touch kill` is on, an organism will immediatly die when touched by a killer cell.
 
 ## Reproduction
 Once an organism has eaten as much food as it has cells in its body, it will attempt to reproduce. 
