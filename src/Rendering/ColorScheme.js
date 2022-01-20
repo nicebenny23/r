@@ -11,8 +11,8 @@ var color_scheme = {
     "armor":"#7230DB",
     "eye":"#B6C1EA",
     "eye-slit": "#0E1318",
-    "bait":"#1E69A6",
-    "bait-plus":"#000075",
+    "bait":"#000075",
+    "bait-plus":"#1E69A6",
 }
 
 // Renderer controls access to a canvas. There is one renderer for each canvas
