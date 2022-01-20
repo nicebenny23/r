@@ -10,9 +10,7 @@ var color_scheme = {
     "killer":"#F82380",
     "armor":"#7230DB",
     "eye":"#B6C1EA",
-    "eye-slit": "#0E1318",
-    "bait":"#000075",
-    "bait-plus":"#1E69A6",
+    "eye-slit": "#0E1318"
 }
 
 // Renderer controls access to a canvas. There is one renderer for each canvas
@@ -26,8 +24,7 @@ class ColorScheme {
         for (var state of CellStates.all) {
             state.color = color_scheme[state.name];
         }
-        CellStates.eye.slit_color=color_scheme['eye-slit'];
-        CellStates.bait.plus_color=color_scheme['bait-plus'];
+        CellStates.eye.slit_color=color_scheme['eye-slit']
         for (var cell_type in color_scheme) {
             $('#'+cell_type+'.cell-type ').css('background-color', color_scheme[cell_type]);
             $('#'+cell_type+'.cell-legend-type').css('background-color', color_scheme[cell_type]);

@@ -74,28 +74,6 @@ class Eye extends CellState {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 }
-class Bait extends CellState {
-    constructor() {
-        super('bait');
-        this.plus_color = 'lightblue';
-    }
-    render(ctx, cell, size) {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(cell.x, cell.y, size, size);
-        if(size == 1)
-            return;
-        var half = size/2;
-        var x = -(size)/8
-        var y = -half;
-        var h = size;
-        var w = size/4;
-        ctx.translate(cell.x+half, cell.y+half);
-        ctx.fillStyle = this.plus_color;
-        ctx.fillRect(x, y, w, h);
-        ctx.fillRect(y, x, h, w);
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-    }
-}
 
 const CellStates = {
     empty: new Empty(),
@@ -107,10 +85,9 @@ const CellStates = {
     killer: new Killer(),
     armor: new Armor(),
     eye: new Eye(),
-    bait: new Bait(),
     defineLists() {
-        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye, this.bait];
-        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye, this.bait];
+        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye]
+        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye];
     },
     getRandomName: function() {
         return this.all[Math.floor(Math.random() * this.all.length)].name;
