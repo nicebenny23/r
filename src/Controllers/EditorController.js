@@ -100,6 +100,19 @@ class EditorController extends CanvasController{
         $('#mutation-rate-edit').change ( function() {
             this.env.organism.mutability = parseInt($('#mutation-rate-edit').val());
         }.bind(this));
+
+        $('#mutation-add-edit').change ( function() {
+            this.env.organism.addProb = parseFloat($('#mutation-add-edit').val());
+        }.bind(this));
+
+        $('#mutation-change-edit').change ( function() {
+            this.env.organism.changeProb = parseFloat($('#mutation-change-edit').val());
+        }.bind(this));
+
+        $('#mutation-remove-edit').change ( function() {
+            this.env.organism.removeProb = parseFloat($('#mutation-remove-edit').val());
+        }.bind(this));
+
         $('#observation-type-edit').change ( function() {
             this.setBrainEditorValues($('#observation-type-edit').val());
             this.setBrainDetails();
@@ -115,6 +128,7 @@ class EditorController extends CanvasController{
     clearDetailsPanel() {
         $('#organism-details').css('display', 'none');
         $('#edit-organism-details').css('display', 'none');
+        $('#randomize-organism-details').css('display', 'none');
     }
 
     refreshDetailsPanel() {
@@ -131,12 +145,13 @@ class EditorController extends CanvasController{
         $('.cell-count').text("Cell count: "+org.anatomy.cells.length);
         $('#move-range').text("Move Range: "+org.move_range);
         $('#mutation-rate').text("Mutation Rate: "+org.mutability);
+        $('#mutation-probs').text(" (Add: "+org.addProb.toFixed(2)+", Change: "+org.changeProb.toFixed(2)+", Remove: "+org.removeProb.toFixed(2)+")");
        
 		if (Hyperparams.useGlobalMutability) {
             $('#mutation-rate').css('display', 'none');
         }
         else {
-            $('#mutation-rate').css('display', 'block');
+            $('#mutation-rate').css('display', 'inline');
         }
 
         this.setMoveRangeVisibility();
@@ -158,6 +173,10 @@ class EditorController extends CanvasController{
         }
 
 		$('#mutation-rate-edit').val(org.mutability);
+        $('#mutation-add-edit').val(org.addProb);
+        $('#mutation-change-edit').val(org.changeProb);
+        $('#mutation-remove-edit').val(org.removeProb);
+
         if (Hyperparams.useGlobalMutability) {
 			$('#mutation-rate-cont').css('display', 'none');
         }
@@ -215,6 +234,11 @@ class EditorController extends CanvasController{
         $('#observation-type-edit').val(name);
         var reaction = this.env.organism.brain.decisions[name];
         $('#reaction-edit').val(reaction);
+    }
+
+    setRandomizePanel() {
+        this.clearDetailsPanel();
+        $('#randomize-organism-details').css('display', 'block');
     }
 }
 
