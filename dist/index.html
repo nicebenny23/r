@@ -66,6 +66,7 @@
 							<div class='cell-legend-type-living' id='killer' title="Killer: Harms organisms in adjacent cells."></div>
 							<div class='cell-legend-type-living' id='armor' title="Armor: Negates affects of killer cell."></div>
 							<div class='cell-legend-type-living' id='eye' title="Eye: Observes cells and decides movement."></div>
+              <div class='cell-legend-type-living' id='bait' title="Bait: Deceives the eye cells, looks like a food."></div>
 							<div class='cell-legend-type' id='food' title="Food: Not part of an organism. Once an organism has eaten enough food, it will reproduce."></div>
 							<div class='cell-legend-type' id='wall' title="Wall: Not part of an organism. Blocks movement and reproduction."></div>
 						</div><br>
@@ -101,6 +102,9 @@
 								<div class='cell-type' id='killer' title="Killer: Harms organisms in adjacent cells."></div>
 								<div class='cell-type' id='armor' title="Armor: Negates affects of killer cell."></div>
 								<div class='cell-type' id='eye' title="Eye: Looks for cells to move away from or towards. Click again on a placed cell to rotate"></div>
+							</div>
+							<div style='grid-column: 3;'>
+								<div class='cell-type' id='bait' title="Bait: Deceives the eye cells, looks like a food."></div>
 							</div>
 
 							<button id='clear-editor'>Clear</button>
@@ -220,7 +224,7 @@
 						<label for="rot-enabled" title='Organisms rotate when born and while moving.'>Rotation Enabled</label>
 						<input type="checkbox" id="rot-enabled" checked>
 						<br>
-						<label for="insta-kill" title='When on, killer cells immediatly kill organisms they touch. When off, organisms have as much health as they have cells and only take 1 damage from killer cells.'>One touch kill</label>
+						<label for="insta-kill" title='When on, killer cells immediatly kill organisms they touch. When off, organisms have as much health as they have cells and only take 1 damage from killer.'>One touch kill</label>
 						<input type="checkbox" id="insta-kill">
 						<br>
 						<label for="look-range" title='How far an eye cell can see (in number of cells)'>Look range:</label>
