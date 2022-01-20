@@ -418,7 +418,7 @@ class ControlPanel {
 
             code += "Cell Count: " + cells.length + "\n";
             if(anatomy.is_mover) code += "Move Range: " + org.move_range + "\n";
-            code += "Mutation Rate: " + org.mutability + "\n";
+            code += "Mutation Rate: " + org.mutability + " (Add: "+org.addProb.toFixed(2)+", Change: "+org.changeProb.toFixed(2)+", Remove: "+org.removeProb.toFixed(2)+")\n";
             if(anatomy.is_mover && anatomy.has_eyes){
                 let brain = org.brain;
 
