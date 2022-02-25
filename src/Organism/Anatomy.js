@@ -11,6 +11,13 @@ class Anatomy {
         this.birth_distance = 4;
     }
 
+    toSaveJSON() {
+        return {
+            cells: this.cells.map(cell => cell.toSaveJSON()),
+            birth_distance: this.birth_distance
+        }
+    }
+
     canAddCellAt(c, r) {
         for (var cell of this.cells) {
             if (cell.loc_col == c && cell.loc_row == r){

@@ -136,14 +136,17 @@ class WorldEnvironment extends Environment{
         }
     }
 
-    reset(confirm_reset=true, reset_life=true) {
+    reset(confirm_reset=true, reset_life=true, force_clear_walls=false, organisms=[], total_mutability=0) {
         if (confirm_reset && !confirm('The current environment will be lost. Proceed?'))
             return false;
 
-        this.organisms = [];
-        this.grid_map.fillGrid(CellStates.empty, !WorldConfig.clear_walls_on_reset);
+        this.grid_map.fillGrid(CellStates.empty, force_clear_walls ? false : !WorldConfig.clear_walls_on_reset);
+        this.organisms = organisms;
+        for (let org of this.organisms) {
+            org.updateGrid();
+        }
         this.renderer.renderFullGrid(this.grid_map.grid);
-        this.total_mutability = 0;
+        this.total_mutability = total_mutability;
         this.total_ticks = 0;
         FossilRecord.clear_record();
         if (reset_life)

@@ -3,6 +3,8 @@ const Modes = require("./ControlModes");
 const StatsPanel = require("../Stats/StatsPanel");
 const RandomOrganismGenerator = require("../Organism/RandomOrganismGenerator")
 const WorldConfig = require("../WorldConfig");
+const Organism = require("../Organism/Organism");
+const CellStates = require("../Organism/Cell/CellStates");
 
 class ControlPanel {
     constructor(engine) {
@@ -205,6 +207,58 @@ class ControlPanel {
             let org = this.editor_controller.env.getCopyOfOrg();
             this.env_controller.add_new_species = true;
             this.env_controller.dropOrganism(org, center[0], center[1])
+        });
+
+        $('#save-sim').click(() => {
+            let food = []
+            for (let row of this.engine.env.grid_map.grid) {
+                for (let cell of row) {
+                    if (cell.state.name === "food") {
+                        food.push(cell.toSaveJSON())
+                    }
+                }
+            }
+            let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                organisms: this.engine.env.organisms.map(org => org.toSaveJSON()),
+                walls: this.engine.env.walls.map(cell => cell.toSaveJSON()),
+                cols: this.engine.env.grid_map.cols,
+                rows: this.engine.env.grid_map.rows,
+                food: food,
+                mutability: this.engine.env.total_mutability,
+                largest_cell_count: this.engine.env.largest_cell_count
+            }));
+            let downloadEl = document.getElementById('download-sim-el');
+            downloadEl.setAttribute("href", data);
+            downloadEl.setAttribute("download", "simulation.json");
+            downloadEl.click();
+        });
+        $('#load-sim').click(() => {
+            $('#upload-sim-el').click();
+        });
+        $('#upload-sim-el').change((e)=>{
+            let files = e.target.files;
+            if (!files.length) {return;};
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                let result=JSON.parse(e.target.result);
+                
+                var cell_size = $('#cell-size').val();
+                this.engine.env.resizeGridColRow(cell_size, result.cols, result.rows);
+                this.engine.env.reset(false, false, true, result.organisms.map(org => Organism.fromSaveJSON(org, this.engine.env)), result.mutability);
+                this.stats_panel.reset();
+
+                for (let food of result.food) {
+                    this.engine.env.changeCell(food.col, food.row, CellStates.food, null);
+                }
+
+                for (let wall of result.walls) {
+                    this.engine.env.changeCell(wall.col, wall.row, CellStates.wall, null);
+                }
+
+                // have to clear the value so change() will be triggered if the same file is uploaded again
+                $('#upload-el')[0].value = '';
+            };
+            reader.readAsText(files[0]);
         });
     }
 

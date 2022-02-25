@@ -5,6 +5,10 @@ const Directions = require("./Directions");
 const Anatomy = require("./Anatomy");
 const Brain = require("./Perception/Brain");
 const FossilRecord = require("../Stats/FossilRecord");
+const BodyCell = require("./Cell/BodyCells/BodyCell");
+const Observation = require("./Perception/Observation");
+const BodyCellFactory = require("./Cell/BodyCells/BodyCellFactory");
+const TypeMap = require("./Cell/BodyCells/TypeMap");
 
 class Organism {
     constructor(col, row, env, parent=null) {
@@ -26,6 +30,49 @@ class Organism {
         this.brain = new Brain(this);
         if (parent != null) {
             this.inherit(parent);
+        }
+    }
+
+    static fromSaveJSON(json, env) {
+        let org = new Organism(null, null, env);
+        org.c = json.col;
+        org.r = json.row;
+        org.lifetime = json.lifetime;
+        org.food_collected = json.food_collected;
+        org.anatomy.cells = json.anatomy.cells.map(json => {
+            //console.log(BodyCellFactory.type_map[json.state]);
+            //console.log(json.state);
+            return TypeMap[json.state].fromSaveJSON(json, org)
+        });
+        org.anatomy.birth_distance = json.anatomy.birth_distance;
+        org.direction = json.direction;
+        org.rotation = json.rotation;
+        org.move_count = json.move_count;
+        org.move_range = json.move_range;
+        org.ignore_brain_for = json.ignore_brain_for;
+        org.mutability = json.mutability;
+        org.damage = json.damage;
+        org.brain.decisions = json.brain.decisions;
+        //org.species = json.species;
+        return org;
+    }
+
+    toSaveJSON() {
+        return {
+            col: this.c,
+            row: this.r,
+            lifetime: this.lifetime,
+            food_collected: this.food_collected,
+            anatomy: this.anatomy.toSaveJSON(),
+            direction: this.direction,
+            rotation: this.rotation,
+            move_count: this.move_count,
+            move_range: this.move_range,
+            ignore_brain_for: this.ignore_brain_for,
+            mutability: this.mutability,
+            damage: this.damage,
+            brain: this.brain.toSaveJSON(),
+            //species: this.species.toSaveJSON()
         }
     }
 
@@ -111,10 +158,10 @@ class Organism {
             this.env.addOrganism(org);
             org.updateGrid();
             if (mutated) {
-                FossilRecord.addSpecies(org, this.species);
+                //FossilRecord.addSpecies(org, this.species);
             }
             else {
-                org.species.addPop();
+                //org.species.addPop();
             }
         }
         Math.max(this.food_collected -= this.foodNeeded(), 0);
@@ -263,7 +310,7 @@ class Organism {
             var real_r = this.r + cell.rotatedRow(this.rotation);
             this.env.changeCell(real_c, real_r, CellStates.food, null);
         }
-        this.species.decreasePop();
+        //this.species.decreasePop();
         this.living = false;
     }
 
