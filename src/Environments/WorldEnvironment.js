@@ -101,6 +101,9 @@ class WorldEnvironment extends Environment{
     }
 
     changeCell(c, r, state, owner) {
+        let cell = this.grid_map.cellAt(c, r);
+        if (cell && cell.state == CellStates.wall)
+            this.walls.splice(this.walls.indexOf(cell), 1);
         super.changeCell(c, r, state, owner);
         this.renderer.addToRender(this.grid_map.cellAt(c, r));
         if(state == CellStates.wall)
