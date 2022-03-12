@@ -32,6 +32,12 @@ class Brain {
         this.decisions[CellStates.eye.name] = Decision.neutral;
     }
 
+    toSaveJSON() {
+        return {
+            decisions: this.decisions
+        }
+    }
+
     randomizeDecisions(randomize_all=false) {
         // randomize the non obvious decisions
         if (randomize_all) {

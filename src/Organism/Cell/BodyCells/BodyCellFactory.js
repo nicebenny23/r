@@ -31,8 +31,8 @@ const BodyCellFactory = {
         return cell;
     },
 
-    createDefault: function(org, state, loc_col, loc_row) {
-        var cell = new this.type_map[state.name](org, loc_col, loc_row);
+    createDefault: function(org, state, loc_col, loc_row, e=false) {
+        var cell = new this.type_map[state.name](org, loc_col, loc_row, e);
         cell.initDefault();
         return cell;
     },
