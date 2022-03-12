@@ -16,7 +16,11 @@ class Anatomy {
     toSaveJSON() {
         return {
             cells: this.cells.map(cell => cell.toSaveJSON()),
-            birth_distance: this.birth_distance
+            birth_distance: this.birth_distance,
+            total_cost: this.total_cost,
+            is_producer: this.is_producer,
+            is_mover: this.is_mover,
+            has_eyes: this.has_eyes
         }
     }
 

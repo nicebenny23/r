@@ -48,6 +48,10 @@ class Organism {
             return TypeMap[json.state].fromSaveJSON(json, org)
         });
         org.anatomy.birth_distance = json.anatomy.birth_distance;
+        org.anatomy.total_cost = json.anatomy.total_cost;
+        org.anatomy.is_producer = json.anatomy.is_producer;
+        org.anatomy.is_mover = json.anatomy.is_mover;
+        org.anatomy.has_eyes = json.anatomy.has_eyes;
         org.direction = json.direction;
         org.rotation = json.rotation;
         org.move_count = json.move_count;
