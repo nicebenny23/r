@@ -270,7 +270,7 @@ class ControlPanel {
                 this.stats_panel.reset();
 
                 for (let food of result.food) {
-                    this.engine.env.changeCell(food.col, food.row, CellStates.food, null);
+                    this.engine.env.changeCell(food.col, food.row, CellStates.food, food.owner ? food.owner : null);
                 }
 
                 for (let wall of result.walls) {

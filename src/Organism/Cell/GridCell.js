@@ -17,7 +17,8 @@ class Cell{
         return {
             state: this.state.name,
             col: this.col,
-            row: this.row
+            row: this.row,
+            owner: this.owner ? this.owner : null
         }
     }
 
