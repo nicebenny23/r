@@ -3,8 +3,16 @@ const BodyCell = require("./BodyCell");
 const Hyperparams = require("../../../Hyperparameters");
 
 class KillerCell extends BodyCell{
-    constructor(org, loc_col, loc_row){
-        super(CellStates.killer, org, loc_col, loc_row);
+    constructor(org, loc_col, loc_row, skip_distance_whatever=false){
+        super(CellStates.killer, org, loc_col, loc_row, skip_distance_whatever);
+    }
+
+    static fromSaveJSON(json, org) {
+        let cell = new KillerCell(org, null, null, true);
+        cell.state = CellStates[json.state];
+        cell.loc_col = json.col;
+        cell.loc_row = json.row;
+        return cell;
     }
 
     performFunction() {

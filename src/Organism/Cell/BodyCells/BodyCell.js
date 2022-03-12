@@ -3,15 +3,25 @@ const Directions = require("../../Directions");
 
 // A body cell defines the relative location of the cell in it's parent organism. It also defines their functional behavior.
 class BodyCell{
-    constructor(state, org, loc_col, loc_row){
+    constructor(state, org, loc_col, loc_row, skip_distance_whatever=false){
         this.state = state;
         this.org = org;
         this.loc_col = loc_col;
         this.loc_row = loc_row;
 
-        var distance = Math.max(Math.abs(loc_row)*2 + 2, Math.abs(loc_col)*2 + 2);
-        if (this.org.anatomy.birth_distance < distance) {
-            this.org.anatomy.birth_distance = distance;
+        if (!skip_distance_whatever) {
+            var distance = Math.max(Math.abs(loc_row)*2 + 2, Math.abs(loc_col)*2 + 2);
+            if (this.org.anatomy.birth_distance < distance) {
+                this.org.anatomy.birth_distance = distance;
+            }
+        }
+    }
+
+    toSaveJSON() {
+        return {
+            state: this.state.name,
+            col: this.loc_col,
+            row: this.loc_row
         }
     }
 

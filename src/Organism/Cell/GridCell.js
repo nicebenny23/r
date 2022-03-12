@@ -13,6 +13,14 @@ class Cell{
         this.y = y;
     }
 
+    toSaveJSON() {
+        return {
+            state: this.state.name,
+            col: this.col,
+            row: this.row
+        }
+    }
+
     setType(state) {
         this.state = state;
     }
