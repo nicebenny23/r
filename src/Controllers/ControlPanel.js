@@ -247,6 +247,9 @@ class ControlPanel {
                 rows: this.engine.env.grid_map.rows,
                 food: food,
                 mutability: this.engine.env.total_mutability,
+                add_mutability: this.engine.env.total_add_mutability,
+                change_mutability: this.engine.env.total_change_mutability,
+                remove_mutability: this.engine.env.total_remove_mutability,
                 largest_cell_count: this.engine.env.largest_cell_count
             }));
             let downloadEl = document.getElementById('download-sim-el');
@@ -266,7 +269,7 @@ class ControlPanel {
                 
                 var cell_size = $('#cell-size').val();
                 this.engine.env.resizeGridColRow(cell_size, result.cols, result.rows);
-                this.engine.env.reset(false, false, true, result.organisms.map(org => Organism.fromSaveJSON(org, this.engine.env)), result.mutability);
+                this.engine.env.reset(false, false, true, result.organisms.map(org => Organism.fromSaveJSON(org, this.engine.env)), result.mutability, result.add_mutability, result.change_mutability, result.remove_mutability);
                 this.stats_panel.reset();
 
                 for (let food of result.food) {
