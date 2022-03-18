@@ -268,7 +268,7 @@ class ControlPanel {
             reader.onload = (e) => {
                 let result=JSON.parse(e.target.result);
                 
-                var cell_size = result.cell_size;
+                var cell_size = result.cell_size ? result.cell_size : $('#cell-size').val();
                 this.engine.env.resizeGridColRow(cell_size, result.cols, result.rows);
                 this.engine.env.reset(false, false, true, result.organisms.map(org => Organism.fromSaveJSON(org, this.engine.env)), result.mutability, result.add_mutability, result.change_mutability, result.remove_mutability);
                 this.stats_panel.reset();
