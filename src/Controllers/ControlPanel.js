@@ -282,7 +282,7 @@ class ControlPanel {
                 }
 
                 // have to clear the value so change() will be triggered if the same file is uploaded again
-                $('#upload-el')[0].value = '';
+                $('#upload-sim-el')[0].value = '';
             };
             reader.readAsText(files[0]);
         });
