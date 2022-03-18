@@ -241,6 +241,7 @@ class ControlPanel {
                 }
             }
             let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                cell_size: this.engine.env.renderer.cell_size,
                 organisms: this.engine.env.organisms.map(org => org.toSaveJSON()),
                 walls: this.engine.env.walls.map(cell => cell.toSaveJSON()),
                 cols: this.engine.env.grid_map.cols,
@@ -267,7 +268,7 @@ class ControlPanel {
             reader.onload = (e) => {
                 let result=JSON.parse(e.target.result);
                 
-                var cell_size = $('#cell-size').val();
+                var cell_size = result.cell_size;
                 this.engine.env.resizeGridColRow(cell_size, result.cols, result.rows);
                 this.engine.env.reset(false, false, true, result.organisms.map(org => Organism.fromSaveJSON(org, this.engine.env)), result.mutability, result.add_mutability, result.change_mutability, result.remove_mutability);
                 this.stats_panel.reset();
